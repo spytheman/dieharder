@@ -136,6 +136,7 @@ void parsecl(int argc, char **argv)
        break;
      case 'f':
        strncpy(filename,optarg,128);
+       strncpy(xfilename,optarg,128);
        fromfile = 1;
        break;
      /*

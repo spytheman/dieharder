@@ -239,6 +239,7 @@ extern unsigned int file_input_get_rewind_cnt(gsl_rng *rng);
 extern off_t file_input_get_rtot(gsl_rng *rng);
 extern void file_input_set_rtot(gsl_rng *rng,unsigned int value);
 
+extern char xfilename[K];      /* Input file name */
 extern char filename[K];      /* Input file name */
 extern int fromfile;		/* set true if file is used for rands */
 extern int filenumbits;	/* number of bits per integer */

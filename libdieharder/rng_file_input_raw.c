@@ -78,7 +78,7 @@ static unsigned long int file_input_raw_get(void *vstate)
    }
    return(iret);
  } else {
-   fprintf(stderr,"Error: %s not open.  Exiting.\n", filename);
+   fprintf(stderr,"Error: %s not open.  Exiting.\n", xfilename);
    exit(0);
  }
 
@@ -106,6 +106,10 @@ static void file_input_raw_set (void *vstate, unsigned long int s)
 
  file_input_state_t *state = (file_input_state_t *) vstate;
 
+ if(verbose) {
+    fprintf(stdout,"# file_input_raw(): filename: %s .\n", xfilename);
+ }
+
  if(verbose == D_FILE_INPUT_RAW || verbose == D_ALL){
    fprintf(stdout,"# file_input_raw(): entering file_input_raw_set\n");
    fprintf(stdout,"# file_input_raw(): state->fp = %p, seed = %lu\n",(void*) state->fp,s);
@@ -128,9 +132,9 @@ static void file_input_raw_set (void *vstate, unsigned long int s)
     */
    state->fp = NULL;
 
-   if(stat(filename, &sbuf)){
+   if(stat(xfilename, &sbuf)){
      if(errno == EBADF){
-       fprintf(stderr,"# file_input_raw(): Error -- file descriptor %s bad.\n",filename);
+       fprintf(stderr,"# file_input_raw(): Error -- file descriptor %s bad.\n", xfilename);
        exit(0);
      }
    }
@@ -149,11 +153,11 @@ static void file_input_raw_set (void *vstate, unsigned long int s)
      state->flen = sbuf.st_size/sizeof(uint);
      filecount = state->flen;
      if (filecount < 16) {
-       fprintf(stderr,"# file_input_raw(): Error -- file %s is too small.\n",filename);
+       fprintf(stderr,"# file_input_raw(): Error -- file %s is too small.\n", xfilename);
        exit(0);
      }
    } else if (S_ISDIR(sbuf.st_mode)){
-     fprintf(stderr,"# file_input_raw(): Error -- path %s is a directory.\n",filename);
+     fprintf(stderr,"# file_input_raw(): Error -- path %s is a directory.\n", xfilename);
      exit(0);
    } else {
       /*
@@ -177,7 +181,7 @@ static void file_input_raw_set (void *vstate, unsigned long int s)
   */
  if(state->fp && s ) {
    if(verbose == D_FILE_INPUT || verbose == D_ALL){
-     fprintf(stdout,"# file_input(): Closing/reopening/resetting %s\n",filename);
+     fprintf(stdout,"# file_input(): Closing/reopening/resetting %s\n", xfilename);
    }
    fclose(state->fp);
    state->fp = NULL;
@@ -185,7 +189,7 @@ static void file_input_raw_set (void *vstate, unsigned long int s)
 
  if (state->fp == NULL){
    if(verbose == D_FILE_INPUT_RAW || verbose == D_ALL){
-     fprintf(stdout,"# file_input_raw(): Opening %s\n", filename);
+     fprintf(stdout,"# file_input_raw(): Opening %s\n", xfilename);
    }
 
    /*
@@ -193,8 +197,8 @@ static void file_input_raw_set (void *vstate, unsigned long int s)
     * length.  We can now open it.  The test catches all other conditions
     * that might keep the file from reading, e.g. permissions.
     */
-   if ((state->fp = fopen(filename,"r")) == NULL) {
-     fprintf(stderr,"# file_input_raw(): Error: Cannot open %s, exiting.\n", filename);
+   if ((state->fp = fopen(xfilename,"r")) == NULL) {
+     fprintf(stderr,"# file_input_raw(): Error: Cannot open %s, exiting.\n", xfilename);
      exit(0);
    }
 
@@ -202,7 +206,7 @@ static void file_input_raw_set (void *vstate, unsigned long int s)
     * OK, so if we get here, the file is open.
     */
    if(verbose == D_FILE_INPUT_RAW || verbose == D_ALL){
-     fprintf(stdout,"# file_input_raw(): Opened %s for the first time.\n", filename);
+     fprintf(stdout,"# file_input_raw(): Opened %s for the first time.\n", xfilename);
      fprintf(stdout,"# file_input_raw(): state->fp is %8p, file contains %u unsigned integers.\n",(void*) state->fp,(uint)state->flen);
    }
    state->rptr = 0;  /* No rands read yet */
@@ -227,7 +231,7 @@ static void file_input_raw_set (void *vstate, unsigned long int s)
      state->rptr = 0;
      state->rewind_cnt++;
      if(verbose == D_FILE_INPUT_RAW || verbose == D_ALL){
-       fprintf(stderr,"# file_input_raw(): Rewinding %s at rtot = %u\n", filename,(uint) state->rtot);
+       fprintf(stderr,"# file_input_raw(): Rewinding %s at rtot = %u\n", xfilename,(uint) state->rtot);
        fprintf(stderr,"# file_input_raw(): Rewind count = %u, resetting rptr = %u\n",state->rewind_cnt,(uint) state->rptr);
      }
    } else {

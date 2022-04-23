@@ -38,7 +38,9 @@ unsigned int bits;
 unsigned int diehard;
 unsigned int generator;
 
+char xfilename[K];
 char filename[K];
+
 int fromfile;
 
 unsigned long int seed;
@@ -58,6 +60,7 @@ void set_globals()
  binary = NO;           /* Do output a random stream in binary (with -o) */
  dtest_num = -1;        /* -1 means no test selected */
  dtest_name[0] = (char)0; /* empty test name is also default */
+ xfilename[0] = (char)0; /* No input file */
  filename[0] = (char)0; /* No input file */
  fromfile = 0;          /* Not from an input file */
  ks_test = 0;           /* Default is 0, Symmetrized KS test */

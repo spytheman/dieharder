@@ -62,6 +62,7 @@ SEXP dieharder(SEXP genS, SEXP testS, SEXP seedS, SEXP psamplesS, SEXP verbS, SE
 
     if (strcmp(inputfile, "") != 0) {
 	strncpy(filename, inputfile, 128);
+       strncpy(xfilename, inputfile, 128);
 	fromfile = 1;			/* flag this as file input */
     }
  
